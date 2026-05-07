@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_primary">#1F1F1F</color>
+    <color name="clock_text">#8E8E93</color>
+    <color name="button_blue">#5E5CE6</color>
+    <color name="button_red">#E53935</color>
+    <color name="button_gray">#6E6E72</color>
+    <color name="button_text">#FFFFFF</color>
+</resources>
