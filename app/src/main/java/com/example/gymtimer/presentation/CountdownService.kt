@@ -53,6 +53,10 @@ class CountdownService : Service() {
         var cycleCount: Int = 0
             private set
 
+        fun resetCycles() {
+            cycleCount = 0
+        }
+
         @Volatile
         var state: State = State.IDLE
             private set

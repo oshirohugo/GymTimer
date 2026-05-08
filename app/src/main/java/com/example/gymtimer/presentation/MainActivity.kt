@@ -83,6 +83,10 @@ class MainActivity : ComponentActivity() {
         primaryButton.setOnClickListener { onPrimaryClicked() }
         resetButton.setOnClickListener { send(CountdownService.ACTION_RESET, foreground = false) }
         resumeButton.setOnClickListener { send(CountdownService.ACTION_RESUME, foreground = true) }
+        roundNumberTextView.setOnClickListener {
+            CountdownService.resetCycles()
+            roundNumberTextView.text = "0"
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
