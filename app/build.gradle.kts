@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.compose.foundation)
     implementation(libs.wear.tooling.preview)
+    implementation(libs.wear.ongoing)
     implementation(libs.activity.compose)
     implementation(libs.core.splashscreen)
     implementation(libs.appcompat)

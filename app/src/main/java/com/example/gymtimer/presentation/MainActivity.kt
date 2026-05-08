@@ -2,12 +2,14 @@ package com.example.gymtimer.presentation
 
 import android.Manifest
 import android.animation.ValueAnimator
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -40,6 +42,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        val config = Configuration(newBase.resources.configuration).apply {
+            uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or
+                    Configuration.UI_MODE_NIGHT_YES
+        }
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
+
     private val handler = Handler(Looper.getMainLooper())
     private val refreshUi = object : Runnable {
         override fun run() {
@@ -68,7 +78,7 @@ class MainActivity : ComponentActivity() {
         resumeButton = findViewById(R.id.resumeButton)
 
         // Distance from each paused button's natural position to the centerline.
-        splitOffsetPx = 42f * resources.displayMetrics.density
+        splitOffsetPx = 40f * resources.displayMetrics.density
 
         primaryButton.setOnClickListener { onPrimaryClicked() }
         resetButton.setOnClickListener { send(CountdownService.ACTION_RESET, foreground = false) }
@@ -111,6 +121,9 @@ class MainActivity : ComponentActivity() {
         }
         registerReceiver(clockReceiver, filter)
         updateClock()
+
+        getSystemService(NotificationManager::class.java)
+            ?.cancel(CountdownService.FINISH_NOTIFICATION_ID)
     }
 
     override fun onPause() {
