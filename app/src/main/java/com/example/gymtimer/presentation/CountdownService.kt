@@ -13,6 +13,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -31,7 +32,7 @@ class CountdownService : Service() {
         const val ACTION_RESUME = "com.example.gymtimer.RESUME"
         const val ACTION_RESET = "com.example.gymtimer.RESET"
         const val DURATION_MS = 60_000L
-        const val MAX_CYCLES = 2
+        const val MAX_CYCLES = 3
 
         private const val CHANNEL_ID = "gym_timer_countdown"
         private const val FINISH_CHANNEL_ID = "gym_timer_finished"
@@ -65,6 +66,7 @@ class CountdownService : Service() {
     private var timer: CountDownTimer? = null
     private lateinit var notificationManager: NotificationManager
     private var vibrator: Vibrator? = null
+    private var wakeLock: PowerManager.WakeLock? = null
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -99,6 +101,7 @@ class CountdownService : Service() {
         remainingMs = DURATION_MS
         state = State.RUNNING
         startForegroundCompat(buildNotification())
+        acquireWakeLock(DURATION_MS)
         startTimer(DURATION_MS)
     }
 
@@ -110,6 +113,7 @@ class CountdownService : Service() {
         }
         state = State.RUNNING
         startForegroundCompat(buildNotification())
+        acquireWakeLock(remainingMs)
         startTimer(remainingMs)
     }
 
@@ -117,6 +121,7 @@ class CountdownService : Service() {
         timer?.cancel()
         timer = null
         state = State.PAUSED
+        releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -126,6 +131,7 @@ class CountdownService : Service() {
         timer = null
         remainingMs = DURATION_MS
         state = State.IDLE
+        releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -148,6 +154,7 @@ class CountdownService : Service() {
                 // otherwise the process can doze and the queued vibrations are dropped.
                 val keepAliveMs = (PULSE_COUNT - 1) * PULSE_INTERVAL_MS + PULSE_DURATION_MS + 150L
                 mainHandler.postDelayed({
+                    releaseWakeLock()
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
                 }, keepAliveMs)
@@ -248,6 +255,26 @@ class CountdownService : Service() {
         runCatching { startActivity(launchIntent) }
     }
 
+    private fun acquireWakeLock(timerDurationMs: Long) {
+        if (wakeLock?.isHeld == true) return
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        // Keeps the CPU running so CountDownTimer.onFinish() fires and the
+        // queued vibration pulses are delivered even when the watch dozes.
+        val tailMs = (PULSE_COUNT - 1) * PULSE_INTERVAL_MS + PULSE_DURATION_MS + 1_000L
+        wakeLock = pm.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "GymTimer:CountdownWakeLock"
+        ).apply {
+            setReferenceCounted(false)
+            acquire(timerDurationMs + tailMs)
+        }
+    }
+
+    private fun releaseWakeLock() {
+        wakeLock?.takeIf { it.isHeld }?.release()
+        wakeLock = null
+    }
+
     private fun vibrate() {
         val v = vibrator ?: return
         // Three separate one-shots feel noticeably stronger than a single waveform
@@ -278,5 +305,6 @@ class CountdownService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         timer?.cancel()
+        releaseWakeLock()
     }
 }

@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -144,6 +145,14 @@ class MainActivity : ComponentActivity() {
         val state = CountdownService.state
         countdownTextView.text = formatTime(CountdownService.remainingMs)
         roundNumberTextView.text = CountdownService.cycleCount.toString()
+
+        // Match Samsung's stopwatch: keep the watch awake only while the
+        // countdown is actively running.
+        if (state == CountdownService.State.RUNNING) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
 
         val prev = previousState
         when {
