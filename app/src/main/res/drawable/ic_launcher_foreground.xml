@@ -5,19 +5,60 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Dumbbell bar -->
+    <!-- Outer vibration lines -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,49 L74,49 L74,59 L34,59 Z" />
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"
+        android:strokeWidth="1.79"
+        android:strokeLineCap="round"
+        android:pathData="M27.03,44.31 C24.80,47.29 24.05,51.02 24.05,54.75 C24.05,58.47 24.80,62.20 27.03,65.18" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"
+        android:strokeWidth="1.79"
+        android:strokeLineCap="round"
+        android:pathData="M80.97,44.31 C83.20,47.29 83.95,51.02 83.95,54.75 C83.95,58.47 83.20,62.20 80.97,65.18" />
 
-    <!-- Dumbbell left weight -->
+    <!-- Inner vibration lines -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M37,36 L41,36 Q44,36 44,39 L44,69 Q44,72 41,72 L37,72 Q34,72 34,69 L34,39 Q34,36 37,36 Z" />
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.6"
+        android:strokeWidth="2.68"
+        android:strokeLineCap="round"
+        android:pathData="M32.25,46.55 C30.76,48.79 30.01,51.77 30.01,54.75 C30.01,57.73 30.76,60.71 32.25,62.94" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.6"
+        android:strokeWidth="2.68"
+        android:strokeLineCap="round"
+        android:pathData="M75.75,46.55 C77.24,48.79 77.99,51.77 77.99,54.75 C77.99,57.73 77.24,60.71 75.75,62.94" />
 
-    <!-- Dumbbell right weight -->
+    <!-- Top button (rounded cap) -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M67,36 L71,36 Q74,36 74,39 L74,69 Q74,72 71,72 L67,72 Q64,72 64,69 L64,39 Q64,36 67,36 Z" />
+        android:pathData="M51.62,31.65 L56.38,31.65 A0.60,0.60 0 0,1 56.98,32.25 L56.98,34.78 A0.60,0.60 0 0,1 56.38,35.38 L51.62,35.38 A0.60,0.60 0 0,1 51.02,34.78 L51.02,32.25 A0.60,0.60 0 0,1 51.62,31.65 Z" />
+
+    <!-- Top button stem -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52.51,35.38 L55.49,35.38 L55.49,37.61 L52.51,37.61 Z" />
+
+    <!-- Stopwatch body (stroked circle) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.58"
+        android:pathData="M36.12,54 a17.88,17.88 0 1,0 35.76,0 a17.88,17.88 0 1,0 -35.76,0 z" />
+
+    <!-- Timer hand -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.38"
+        android:strokeLineCap="round"
+        android:pathData="M54,54 L54,42.08" />
+
+    <!-- Center pin -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52.21,54 a1.79,1.79 0 1,0 3.58,0 a1.79,1.79 0 1,0 -3.58,0 z" />
 
 </vector>
